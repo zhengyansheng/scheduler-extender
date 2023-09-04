@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"log"
 
 	"github.com/gin-gonic/gin"
@@ -22,5 +23,5 @@ func main() {
 	r.POST(apiPrefix+"/filter", handlers.FilterHandle)
 	r.POST(apiPrefix+"/prioritize", handlers.ScoreHandle)
 
-	log.Fatal(r.Run(":" + string(*port)))
+	log.Fatal(r.Run(fmt.Sprintf("0.0.0.0:%d", *port)))
 }
