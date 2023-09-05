@@ -36,7 +36,7 @@ func (e *extender) Filter(args extenderv1.ExtenderArgs) *extenderv1.ExtenderFilt
 		scheduleNodes = append(scheduleNodes, nodeName)
 	}
 
-	klog.Infof("filter localstorage pods on nodes: %v", scheduleNodes)
+	klog.Infof("filter pods on nodes: %v", scheduleNodes)
 	return &extenderv1.ExtenderFilterResult{
 		NodeNames:   &scheduleNodes,
 		Nodes:       args.Nodes,
@@ -63,7 +63,7 @@ func (e *extender) Score(args extenderv1.ExtenderArgs) *extenderv1.HostPriorityL
 		}
 	}
 
-	klog.Infof("score localstorage pods on nodes: %v", hostPriorityList)
+	klog.Infof("score pods on nodes: %v", hostPriorityList)
 	return &hostPriorityList
 
 }
