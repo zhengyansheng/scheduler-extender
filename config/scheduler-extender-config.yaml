@@ -3,7 +3,7 @@ kind: KubeSchedulerConfiguration
 clientConnection:
   kubeconfig: /etc/kubernetes/scheduler.conf
 extenders:
-  - urlPrefix: http://10.112.0.20:8000/scheduler/extender
+  - urlPrefix: http://10.112.0.26:31234/scheduler/extender # node节点的ip地址
     filterVerb: filter
     prioritizeVerb: prioritize
     weight: 5

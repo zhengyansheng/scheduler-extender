@@ -1,31 +1,32 @@
-apiGroup: apps/v1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: scheduler-extender
-  namespace: kube-system
-  labels:
-    app: scheduler-extender
+  namespace: default
 spec:
-    replicas: 1
-    selector:
-        matchLabels:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: scheduler-extender
+  template:
+    metadata:
+      labels:
         app: scheduler-extender
-    template:
-        metadata:
-        labels:
-            app: scheduler-extender
-        spec:
-        containers:
-        - name: scheduler-extender
-          image: zhengyscn/scheduler-extender:v1.0.0
+    spec:
+      containers:
+        - image: zhengyscn/scheduler-extender:v1.0.5
           imagePullPolicy: IfNotPresent
-          args:
-          - --port=8000
-          readinessProbe:
-            httpGet:
-                path: /healthz
-                port: 8000
+          name: scheduler-extender
+          command: ["/app/bin/scheduler-extender"]
           livenessProbe:
             httpGet:
-                path: /healthz
-                port: 8000
+              path: /healthz
+              port: 8000
+            initialDelaySeconds: 10
+            timeoutSeconds: 1
+          readinessProbe:
+              httpGet:
+                  path: /healthz
+                  port: 8000
+              initialDelaySeconds: 10
+              timeoutSeconds: 1

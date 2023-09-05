@@ -3,14 +3,65 @@
 ## 拷贝 extender 配置文件
 
 ```bash
-# mv config/scheduler-extender-config.yaml /etc/kubernetes/
+# cp config/scheduler-extender-config.yaml /etc/kubernetes/
 ```
 
-## 拷贝 scheduler 的 Pod yaml文件
+## 修改 manifests/scheduler 的 yaml文件
 
 ```bash
-# mv manifests/kube-scheduler.yaml /etc/kubernetes/manifests
+# vim /etc/kubernetes/manifests/kube-scheduler.yaml
 ```
+
+```yaml
+apiVersion: v1
+kind: Pod
+...
+spec:
+  containers:
+    - command:
+        - kube-scheduler
+        - --authentication-kubeconfig=/etc/kubernetes/scheduler.conf
+        - --authorization-kubeconfig=/etc/kubernetes/scheduler.conf
+        - --bind-address=127.0.0.1
+        - --kubeconfig=/etc/kubernetes/scheduler.conf
+        - --leader-elect=true
+        - --config=/etc/kubernetes/scheduler-extender-config.yaml # 添加这一行
+
+      ......
+
+      volumeMounts:
+      - mountPath: /etc/kubernetes/scheduler.conf
+        name: kubeconfig
+        readOnly: true
+      - mountPath: scheduler-extender-config.yaml # 添加这一行
+        name: scheduler-extender
+        readOnly: true
+
+      ......
+  volumes:
+    - hostPath:
+        path: /etc/kubernetes/scheduler.conf
+        type: FileOrCreate
+      name: kubeconfig
+    - hostPath: # 添加这一行
+        path: /etc/kubernetes/scheduler-extender-config.yaml
+        type: FileOrCreate
+      name: scheduler-extender
+    ...
+
+```
+
+
+## 部署 extender server
+
+```bash
+
+# kubectl apply -f manifests/deployment.yaml
+
+# kubectl apply -f manifests/service.yaml
+```
+
+```text
 
 ## 启动 extender server
 

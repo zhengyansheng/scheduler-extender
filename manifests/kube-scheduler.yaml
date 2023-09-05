@@ -16,7 +16,7 @@ spec:
         - --bind-address=127.0.0.1
         - --kubeconfig=/etc/kubernetes/scheduler.conf
         - --leader-elect=true
-        - --config=/etc/kubernetes/scheduler-extender-config.yaml
+        - --config=/etc/kubernetes/scheduler-extender-config.yaml # 添加这一行
       image: registry.aliyuncs.com/google_containers/kube-scheduler:v1.25.0
       imagePullPolicy: IfNotPresent
       livenessProbe:
@@ -47,7 +47,7 @@ spec:
         - mountPath: /etc/kubernetes/scheduler.conf
           name: kubeconfig
           readOnly: true
-        - mountPath: scheduler-extender-config.yaml
+        - mountPath: scheduler-extender-config.yaml # 添加这一行
           name: scheduler-extender
           readOnly: true
   hostNetwork: true
@@ -60,7 +60,7 @@ spec:
         path: /etc/kubernetes/scheduler.conf
         type: FileOrCreate
       name: kubeconfig
-    - hostPath:
+    - hostPath: # 添加这一行
         path: /etc/kubernetes/scheduler-extender-config.yaml
         type: FileOrCreate
       name: scheduler-extender
