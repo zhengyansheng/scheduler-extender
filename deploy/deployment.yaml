@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: scheduler-extender
-  namespace: default
+  namespace: kube-system
 spec:
   replicas: 1
   selector:
@@ -14,19 +14,21 @@ spec:
         app: scheduler-extender
     spec:
       containers:
-        - image: zhengyscn/scheduler-extender:v1.0.5
+        - image: zhengyscn/scheduler-extender:v1.0.6
           imagePullPolicy: IfNotPresent
           name: scheduler-extender
           command: ["/app/bin/scheduler-extender"]
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8000
+            initialDelaySeconds: 10
+            timeoutSeconds: 1
           livenessProbe:
             httpGet:
               path: /healthz
               port: 8000
             initialDelaySeconds: 10
             timeoutSeconds: 1
-          readinessProbe:
-              httpGet:
-                  path: /healthz
-                  port: 8000
-              initialDelaySeconds: 10
-              timeoutSeconds: 1
+
+      nodeName: master
