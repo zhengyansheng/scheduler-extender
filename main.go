@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"log"
@@ -27,5 +28,12 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to new schedule extender controller: %s", err)
 	}
+
+	ctx, cancelFunc := context.WithCancel(context.Background())
+	defer cancelFunc()
+
+	informerFactory.Start(ctx.Done())
+	informerFactory.WaitForCacheSync(ctx.Done())
+
 	s.Run(fmt.Sprintf("0.0.0.0:%d", *port))
 }

@@ -13,12 +13,12 @@ build:
 
 # Build the docker image
 docker:
-	@docker build -t zhengyscn/scheduler-extender:v1.0.6 .
+	@docker build -t zhengyscn/scheduler-extender:v1.0.8 .
 
 
 # Push the docker image
 push:
-	@docker push zhengyscn/scheduler-extender:v1.0.6
+	@docker push zhengyscn/scheduler-extender:v1.0.8
 
 # Clear the bin directory
 clear:

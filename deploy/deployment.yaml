@@ -13,8 +13,9 @@ spec:
       labels:
         app: scheduler-extender
     spec:
+      serviceAccountName: my-sa
       containers:
-        - image: zhengyscn/scheduler-extender:v1.0.6
+        - image: zhengyscn/scheduler-extender:v1.0.8
           imagePullPolicy: IfNotPresent
           name: scheduler-extender
           command: ["/app/bin/scheduler-extender"]
