@@ -15,21 +15,24 @@ spec:
     spec:
       serviceAccountName: my-sa
       containers:
-        - image: zhengyscn/scheduler-extender:v1.0.8
+        - image: zhengyscn/scheduler-extender:v1.0.11
           imagePullPolicy: IfNotPresent
           name: scheduler-extender
-          command: ["/app/bin/scheduler-extender"]
+          args:
+            - -port=8000
           readinessProbe:
             httpGet:
               path: /healthz
               port: 8000
             initialDelaySeconds: 10
             timeoutSeconds: 1
+            periodSeconds: 10
           livenessProbe:
             httpGet:
               path: /healthz
               port: 8000
             initialDelaySeconds: 10
             timeoutSeconds: 1
+            periodSeconds: 30
 
       nodeName: master

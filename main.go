@@ -17,6 +17,8 @@ var (
 )
 
 func main() {
+	flag.Parse()
+
 	clientSet, err := util.NewClientSet(*kubeconfig)
 	if err != nil {
 		log.Fatalf("Failed to build clientset: %v", err)
