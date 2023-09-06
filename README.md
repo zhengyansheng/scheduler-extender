@@ -68,13 +68,13 @@ spec:
 ```
 
 ```bash
-# kubectl get pod -n default | grep scheduler-extender
+# kubectl get pod -n kube-system | grep scheduler-extender
 scheduler-extender-58c99bf48f-25kd6   1/1     Running   0          79m
 
-# kubectl get svc -n default | grep scheduler-extender
+# kubectl get svc -n kube-system | grep scheduler-extender
 scheduler-extender   NodePort    10.110.24.202   <none>        8000:31234/TCP   75m
 
-# kubectl logs -f scheduler-extender-58c99bf48f-25kd6 -n default
+# kubectl logs -f scheduler-extender-58c99bf48f-25kd6 -n kube-system
 
 ```
 

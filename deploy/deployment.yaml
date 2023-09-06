@@ -15,7 +15,7 @@ spec:
     spec:
       serviceAccountName: my-sa
       containers:
-        - image: zhengyscn/scheduler-extender:v1.0.11
+        - image: zhengyscn/scheduler-extender:v1.0.15
           imagePullPolicy: IfNotPresent
           name: scheduler-extender
           args:
