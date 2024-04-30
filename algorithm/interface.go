@@ -3,6 +3,8 @@ package algorithm
 import (
 	"fmt"
 	"math/rand"
+	"strconv"
+	"strings"
 
 	v1 "k8s.io/client-go/listers/core/v1"
 	"k8s.io/klog/v2"
@@ -30,6 +32,9 @@ func (e *extender) Filter(args extenderv1.ExtenderArgs) *extenderv1.ExtenderFilt
 	scheduleNodes := make([]string, 0)
 	failedNodes := make(map[string]string)
 	for _, nodeName := range *args.NodeNames {
+		if strings.Contains(nodeName, "control") {
+			continue
+		}
 		scheduleNodes = append(scheduleNodes, nodeName)
 	}
 
@@ -60,21 +65,31 @@ func (e *extender) Score(args extenderv1.ExtenderArgs) *extenderv1.HostPriorityL
 			klog.Errorf("get node %s error: %v", nodeName, err)
 			continue
 		}
-		annotations := node.GetAnnotations()
-		klog.Infof("node %s annotations: %v", nodeName, annotations)
-		if annotations != nil {
+		if annotations := node.GetAnnotations(); annotations != nil {
 			_, ok := annotations["score"]
 			if ok {
 				scoreValue = 11
 			}
 		}
+		if labels := node.GetLabels(); labels != nil {
+			if value, ok := labels["score"]; ok {
+				atoi, err := strconv.Atoi(value)
+				if err != nil {
+					klog.Errorf("convert score %s to int error: %v", value, err)
+					scoreValue = 0
+				} else {
+					scoreValue = int64(atoi)
+				}
+			}
+		}
+
 		hostPriorityList[i] = extenderv1.HostPriority{
 			Host:  nodeName,
 			Score: scoreValue,
 		}
 	}
 
-	klog.Infof("score pods on nodes: %v", hostPriorityList)
+	klog.Infof("score pods on nodes: %+v", hostPriorityList)
 	return &hostPriorityList
 
 }
